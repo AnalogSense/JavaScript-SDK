@@ -4,7 +4,10 @@ JavaScript API for analog keyboard input.
 
 ## Supported Devices
 
-Currently only Wooting devices are supported.
+- Everything by Wooting
+- Razer Huntsman V3 Pro
+- Razer Huntsman V3 Pro Tenkeyless
+- Razer Huntsman V3 Pro Mini
 
 ## Scancodes
 
