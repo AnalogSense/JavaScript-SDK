@@ -131,19 +131,15 @@ window.analogsense = {
                 if ("reportId" in filter)
                 {
                     let found = false;
-                    for (const collection of dev.collections)
+                    loop1: for (const collection of dev.collections)
                     {
                         for (const inputReport of collection.inputReports)
                         {
                             if (inputReport.reportId == filter.reportId)
                             {
                                 found = true;
-                                break;
+                                break loop1;
                             }
-                        }
-                        if (found)
-                        {
-                            break;
                         }
                     }
                     if (!found)
