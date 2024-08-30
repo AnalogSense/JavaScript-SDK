@@ -96,29 +96,44 @@
             return scancode;
         }
 
-        function doDisconnect()
+        function softDisconnect()
         {
             document.getElementById("demo").style.display = "none";
             document.getElementById("nodev").style.display = "block";
             document.getElementById("active-keys").innerHTML = "";
-            window.dev.forget();
             window.dev = undefined;
         }
 
-        (async function()
+        function doDisconnect()
+        {
+            window.dev.forget();
+            softDisconnect();
+        }
+
+        async function checkPairedDevices()
         {
             const devices = await analogsense.getDevices();
             if (devices.length != 0)
             {
                 initDemo(devices[0]);
             }
-        })();
+        }
+
+        checkPairedDevices();
+
+        navigator.hid.onconnect = function(event)
+        {
+            if (!window.dev)
+            {
+                checkPairedDevices();
+            }
+        };
 
         navigator.hid.ondisconnect = function(event)
         {
             if (window.dev && event.device == window.dev.dev)
             {
-                doDisconnect();
+                softDisconnect();
             }
         };
     </script>
