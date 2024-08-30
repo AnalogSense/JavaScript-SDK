@@ -12,6 +12,7 @@ class AsProvider
 
     forget()
     {
+        this.stopListening();
         this.dev.forget();
     }
 }
@@ -130,11 +131,73 @@ class AsProviderRazerHuntsmanV3 extends AsProvider
     }
 }
 
+class AsProviderDrunkdeer extends AsProvider
+{
+    static populateFilters(filters)
+    {
+        filters.push({ usagePage: 0xFF00, vendorId: 0x352D });
+    }
+
+    startListening(handler)
+    {
+        const _this = this;
+        this.interval = setInterval(function()
+        {
+            const buf = new Uint8Array(63);
+            buf.set([
+                      0xb6, 0x03, 0x01, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+            ]);
+            _this.dev.sendReport(0x04, buf);
+        });
+        this.dev.oninputreport = function(event)
+        {
+            const n = event.data.getUint8(3);
+            if (n == 0)
+            {
+                this.active_keys = [];
+            }
+            for (let i = 4; i != event.data.byteLength; ++i)
+            {
+                const value = event.data.getUint8(i);
+                if (value != 0)
+                {
+                    this.active_keys.push({
+                        scancode: analogsense.drunkdeerIndexToHidScancode((n * (64 - 5)) + (i - 4)),
+                        value: value / 40
+                    });
+                }
+            }
+            if (n == 2)
+            {
+                handler(this.active_keys);
+            }
+        };
+    }
+
+    stopListening()
+    {
+        if (this.interval)
+        {
+            clearInterval(this.interval);
+            this.interval = undefined;
+        }
+        this.dev.oninputreport = undefined;
+    }
+}
+
 window.analogsense = {
     providers: [
         AsProviderWooting,
         AsProviderRazerHuntsman,
         AsProviderRazerHuntsmanV3,
+        AsProviderDrunkdeer,
     ],
     findProviderForDevice: function(dev)
     {
@@ -351,4 +414,99 @@ window.analogsense = {
         console.warn("Failed to map Razer scancode to HID scancode:", scancode);
         return 0;
     },
+    drunkdeerIndexToHidScancode(i)
+    {
+        switch (i)
+        {
+        case (0 * 21) + 0: return 0x29;   // KEY_ESCAPE
+        case (0 * 21) + 2: return 0x3A;   // KEY_F1
+        case (0 * 21) + 3: return 0x3B;   // KEY_F2
+        case (0 * 21) + 4: return 0x3C;   // KEY_F3
+        case (0 * 21) + 5: return 0x3D;   // KEY_F4
+        case (0 * 21) + 6: return 0x3E;   // KEY_F5
+        case (0 * 21) + 7: return 0x3F;   // KEY_F6
+        case (0 * 21) + 8: return 0x40;   // KEY_F7
+        case (0 * 21) + 9: return 0x41;   // KEY_F8
+        case (0 * 21) + 10: return 0x42;  // KEY_F9
+        case (0 * 21) + 11: return 0x43;  // KEY_F10
+        case (0 * 21) + 12: return 0x44;  // KEY_F11
+        case (0 * 21) + 13: return 0x45;  // KEY_F12
+        case (0 * 21) + 14: return 0x4C;  // KEY_DEL
+
+        case (1 * 21) + 0: return 0x35;   // KEY_BACKQUOTE
+        case (1 * 21) + 1: return 0x1E;   // KEY_1
+        case (1 * 21) + 2: return 0x1F;   // KEY_2
+        case (1 * 21) + 3: return 0x20;   // KEY_3
+        case (1 * 21) + 4: return 0x21;   // KEY_4
+        case (1 * 21) + 5: return 0x22;   // KEY_5
+        case (1 * 21) + 6: return 0x23;   // KEY_6
+        case (1 * 21) + 7: return 0x24;   // KEY_7
+        case (1 * 21) + 8: return 0x25;   // KEY_8
+        case (1 * 21) + 9: return 0x26;   // KEY_9
+        case (1 * 21) + 10: return 0x27;  // KEY_0
+        case (1 * 21) + 11: return 0x2D;  // KEY_MINUS
+        case (1 * 21) + 12: return 0x2E;  // KEY_EQUALS
+        case (1 * 21) + 13: return 0x2A;  // KEY_BACKSPACE
+        case (1 * 21) + 15: return 0x4A;  // KEY_HOME
+
+        case (2 * 21) + 0: return 0x2B;   // KEY_TAB
+        case (2 * 21) + 1: return 0x14;   // KEY_Q
+        case (2 * 21) + 2: return 0x1A;   // KEY_W
+        case (2 * 21) + 3: return 0x08;   // KEY_E
+        case (2 * 21) + 4: return 0x15;   // KEY_R
+        case (2 * 21) + 5: return 0x17;   // KEY_T
+        case (2 * 21) + 6: return 0x1C;   // KEY_Y
+        case (2 * 21) + 7: return 0x18;   // KEY_U
+        case (2 * 21) + 8: return 0x0C;   // KEY_I
+        case (2 * 21) + 9: return 0x12;   // KEY_O
+        case (2 * 21) + 10: return 0x13;  // KEY_P
+        case (2 * 21) + 11: return 0x2F;  // KEY_BRACKET_LEFT
+        case (2 * 21) + 12: return 0x30;  // KEY_BRACKET_RIGHT
+        case (2 * 21) + 13: return 0x31;  // KEY_BACKSLASH
+        case (2 * 21) + 15: return 0x4B;  // KEY_PAGE_UP
+
+        case (3 * 21) + 0: return 0x39;   // KEY_CAPS_LOCK
+        case (3 * 21) + 1: return 0x04;   // KEY_A
+        case (3 * 21) + 2: return 0x16;   // KEY_S
+        case (3 * 21) + 3: return 0x07;   // KEY_D
+        case (3 * 21) + 4: return 0x09;   // KEY_F
+        case (3 * 21) + 5: return 0x0A;   // KEY_G
+        case (3 * 21) + 6: return 0x0B;   // KEY_H
+        case (3 * 21) + 7: return 0x0D;   // KEY_J
+        case (3 * 21) + 8: return 0x0E;   // KEY_K
+        case (3 * 21) + 9: return 0x0F;   // KEY_L
+        case (3 * 21) + 10: return 0x33;  // KEY_SEMICOLON
+        case (3 * 21) + 11: return 0x34;  // KEY_QUOTE
+        case (3 * 21) + 13: return 0x28;  // KEY_ENTER
+        case (3 * 21) + 15: return 0x4E;  // KEY_PAGE_DOWN
+
+        case (4 * 21) + 0: return 0xE1;   // KEY_LSHIFT
+        case (4 * 21) + 2: return 0x1D;   // KEY_Z
+        case (4 * 21) + 3: return 0x1B;   // KEY_X
+        case (4 * 21) + 4: return 0x06;   // KEY_C
+        case (4 * 21) + 5: return 0x19;   // KEY_V
+        case (4 * 21) + 6: return 0x05;   // KEY_B
+        case (4 * 21) + 7: return 0x11;   // KEY_N
+        case (4 * 21) + 8: return 0x10;   // KEY_M
+        case (4 * 21) + 9: return 0x36;   // KEY_COMMA
+        case (4 * 21) + 10: return 0x37;  // KEY_PERIOD
+        case (4 * 21) + 11: return 0x38;  // KEY_SLASH
+        case (4 * 21) + 13: return 0xE5;  // KEY_RSHIFT
+        case (4 * 21) + 14: return 0x52;  // KEY_ARROW_UP
+        case (4 * 21) + 15: return 0x4D;  // KEY_END
+
+        case (5 * 21) + 0: return 0xE0;   // KEY_LCTRL
+        case (5 * 21) + 1: return 0xE3;   // KEY_LMETA
+        case (5 * 21) + 2: return 0xE2;   // KEY_LALT
+        case (5 * 21) + 6: return 0x2C;   // KEY_SPACE
+        case (5 * 21) + 10: return 0xE6;  // KEY_RALT
+        case (5 * 21) + 11: return 0x409; // KEY_FN (Custom mapping)
+        case (5 * 21) + 12: return 0x65;  // Key says "Menu" on it, doesn't seem to do anything.
+        case (5 * 21) + 14: return 0x50;  // KEY_ARROW_LEFT
+        case (5 * 21) + 15: return 0x51;  // KEY_ARROW_DOWN
+        case (5 * 21) + 16: return 0x4F;  // KEY_ARROW_RIGHT
+        }
+        console.warn("Failed to map DrunkDeer key to HID scancode:", i);
+        return 0;
+    }
 };

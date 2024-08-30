@@ -5,11 +5,20 @@ JavaScript API for analog keyboard input.
 ## Supported Devices
 
 - Everything by Wooting
-- Razer Huntsman V2 Analog
-- Razer Huntsman Mini Analog
-- Razer Huntsman V3 Pro
-- Razer Huntsman V3 Pro Tenkeyless
-- Razer Huntsman V3 Pro Mini
+- Razer Huntsman V2 Analog*
+- Razer Huntsman Mini Analog*
+- Razer Huntsman V3 Pro*
+- Razer Huntsman V3 Pro Mini*
+- Razer Huntsman V3 Pro Tenkeyless*
+- DrunkDeer A75
+- DrunkDeer A75 Pro†
+- DrunkDeer G75†
+- DrunkDeer G65†
+- DrunkDeer G60†
+
+\* Razer Synapse needs to be installed and running for analogue inputs to be received from this keyboard.
+
+† I don't own this keyboard, so I've not had a chance to test it, but it should work.
 
 ## Scancodes
 
