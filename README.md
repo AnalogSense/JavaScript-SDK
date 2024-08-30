@@ -5,6 +5,8 @@ JavaScript API for analog keyboard input.
 ## Supported Devices
 
 - Everything by Wooting
+- Razer Huntsman V2 Analog
+- Razer Huntsman Mini Analog
 - Razer Huntsman V3 Pro
 - Razer Huntsman V3 Pro Tenkeyless
 - Razer Huntsman V3 Pro Mini

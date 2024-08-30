@@ -50,6 +50,45 @@ class AsProviderWooting extends AsProvider
     }
 }
 
+class AsProviderRazerHuntsman extends AsProvider
+{
+    static populateFilters(filters)
+    {
+        filters.push({ vendorId: 0x1532, productId: 0x0266, reportId: 7 }); // Razer Huntsman V2 Analog
+        filters.push({ vendorId: 0x1532, productId: 0x0282, reportId: 7 }); // Razer Huntsman Mini Analog
+    }
+
+    startListening(handler)
+    {
+        this.dev.oninputreport = function(event)
+        {
+            if (event.reportId == 7)
+            {
+                const active_keys = [];
+                for (let i = 0; i < event.data.byteLength; )
+                {
+                    const scancode = event.data.getUint8(i++);
+                    if (scancode == 0)
+                    {
+                        break;
+                    }
+                    const value = event.data.getUint8(i++);
+                    active_keys.push({
+                        scancode: analogsense.razerScancodeToHidScancode(scancode),
+                        value: value / 255
+                    });
+                }
+                handler(active_keys);
+            }
+        };
+    }
+
+    stopListening()
+    {
+        this.dev.oninputreport = undefined;
+    }
+}
+
 class AsProviderRazerHuntsmanV3 extends AsProvider
 {
     static populateFilters(filters)
@@ -94,6 +133,7 @@ class AsProviderRazerHuntsmanV3 extends AsProvider
 window.analogsense = {
     providers: [
         AsProviderWooting,
+        AsProviderRazerHuntsman,
         AsProviderRazerHuntsmanV3,
     ],
     findProviderForDevice: function(dev)
