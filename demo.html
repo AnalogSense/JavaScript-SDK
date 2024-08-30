@@ -113,6 +113,14 @@
                 initDemo(devices[0]);
             }
         })();
+
+        navigator.hid.ondisconnect = function(event)
+        {
+            if (window.dev && event.device == window.dev.dev)
+            {
+                doDisconnect();
+            }
+        };
     </script>
 </body>
 </html>
