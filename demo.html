@@ -10,6 +10,10 @@
             <h2>No analog keyboard connected</h2>
             <button class="btn btn-primary" onclick="doConnect();">Connect</button>
         </div>
+        <div id="nohid" style="display:none">
+            <h2>Your browser does not support WebHID</h2>
+            <p>If you want to use this page, you will need to be on a desktop and using Chrome, Edge, Safari, or an alternative Chromium-based browser.</p>
+        </div>
         <div id="demo" style="display:none">
             <h2 id="devname"></h2>
             <button class="btn btn-secondary" onclick="doDisconnect();">Disconnect</button>
@@ -119,23 +123,31 @@
             }
         }
 
-        checkPairedDevices();
-
-        navigator.hid.onconnect = function(event)
+        if ("hid" in navigator)
         {
-            if (!window.dev)
-            {
-                checkPairedDevices();
-            }
-        };
+            checkPairedDevices();
 
-        navigator.hid.ondisconnect = function(event)
-        {
-            if (window.dev && event.device == window.dev.dev)
+            navigator.hid.onconnect = function(event)
             {
-                softDisconnect();
-            }
-        };
+                if (!window.dev)
+                {
+                    checkPairedDevices();
+                }
+            };
+
+            navigator.hid.ondisconnect = function(event)
+            {
+                if (window.dev && event.device == window.dev.dev)
+                {
+                    softDisconnect();
+                }
+            };
+        }
+        else
+        {
+            document.getElementById("nodev").style.display = "none";
+            document.getElementById("nohid").style.display = "block";
+        }
     </script>
 </body>
 </html>
