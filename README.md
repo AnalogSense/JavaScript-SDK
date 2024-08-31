@@ -22,11 +22,19 @@ JavaScript API for analog keyboard input.
 
 ## Scancodes
 
-The scancodes provided by this library are HID scancodes; OEM-specific keys are mapped beyond this single-byte range:
+The scancodes provided by this library are primarily HID scancodes; most keys are mapped as seen on usage page 0x07 (A = 0x04, B = 0x05, ...).
+
+Control keys (usage page 0x0C) are mapped in the `0x3__` range, modulo 0x100:
 - `0x3B5` = Next Track
 - `0x3B6` = Previous Track 
 - `0x3B7` = Stop Media
 - `0x3CD` = Play/Pause
+- `0x394` = Open File Explorer
+- `0x323` = Open Browser Home Page
+
+OEM-specific keys are mapped in the `0x4__` range:
+- `0x401` = Brightness Up
+- `0x402` = Brightness Down
 - `0x403` = Profile 1
 - `0x404` = Profile 2
 - `0x405` = Profile 3
