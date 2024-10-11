@@ -257,42 +257,50 @@ window.analogsense = {
     getDevices: async function()
     {
         const result = [];
-
-        const devices = await navigator.hid.getDevices();
-        for (const dev of devices)
+        if ("hid" in navigator)
         {
-            const provider = analogsense.findProviderForDevice(dev);
-            if (provider)
+            const devices = await navigator.hid.getDevices();
+            for (const dev of devices)
             {
-                if (!dev.opened)
+                const provider = analogsense.findProviderForDevice(dev);
+                if (provider)
                 {
-                    await dev.open();
+                    if (!dev.opened)
+                    {
+                        await dev.open();
+                    }
+                    result.push(new provider(dev));
                 }
-                result.push(new provider(dev));
             }
         }
-
         return result;
     },
     requestDevice: async function()
     {
-        const filters = [];
-        for (const provider of analogsense.providers)
+        if ("hid" in navigator)
         {
-            provider.populateFilters(filters);
-        }
-        const devices = await navigator.hid.requestDevice({ filters });
-        for (const dev of devices)
-        {
-            const provider = analogsense.findProviderForDevice(dev);
-            if (provider)
+            const filters = [];
+            for (const provider of analogsense.providers)
             {
-                if (!dev.opened)
-                {
-                    await dev.open();
-                }
-                return new provider(dev);
+                provider.populateFilters(filters);
             }
+            const devices = await navigator.hid.requestDevice({ filters });
+            for (const dev of devices)
+            {
+                const provider = analogsense.findProviderForDevice(dev);
+                if (provider)
+                {
+                    if (!dev.opened)
+                    {
+                        await dev.open();
+                    }
+                    return new provider(dev);
+                }
+            }
+        }
+        else
+        {
+            alert("Your browser does not support the WebHID API, so analog keyboard input will not be available.");
         }
         return null;
     },
