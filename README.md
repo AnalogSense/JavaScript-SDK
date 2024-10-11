@@ -20,7 +20,25 @@ JavaScript API for analog keyboard input.
 
 † I don't own this keyboard, so I've not had a chance to test it, but it should work.
 
-## Scancodes
+## Usage
+
+You can download and vendor the AnalogSense.js yourself, but you can also just load it straight from this repo:
+```html
+<script src="https://analogsense.org/JavaScript-SDK/AnalogSense.js"></script>
+```
+
+Once loaded, the following global functions become available:
+- `analogsense.getDevices(): Promise<Device[]>`
+- `analogsense.requestDevice(): Promise<Device | undefined>`
+
+A device instance has the following members:
+- `startListening(handler: function<void({scancode: int, value: float}[])>)`
+- `stopListening()`
+- `getProductName(): string`
+- `forget()`
+- `dev: HIDDevice`
+
+### Scancodes
 
 The scancodes provided by this library are primarily HID scancodes; most keys are mapped as seen on usage page 0x07 (A = 0x04, B = 0x05, ...).
 
