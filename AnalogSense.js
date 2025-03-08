@@ -294,6 +294,15 @@ const layout_keychron_k2_he = [ 6, 16,
     KEY_LCTRL,     KEY_LMETA, KEY_LALT, KEY_NONE, KEY_NONE, KEY_NONE, KEY_SPACE, KEY_NONE, KEY_NONE, KEY_RALT,  KEY_FN,        KEY_RCTRL,        KEY_ARROW_LEFT,    KEY_ARROW_DOWN,   KEY_ARROW_RIGHT, KEY_NONE,
 ];
 
+const layout_lemokey_p1_he = [ 6, 15,
+    KEY_ESCAPE,    KEY_F1,    KEY_F2,   KEY_F3,   KEY_F4,   KEY_F5,   KEY_F6,    KEY_F7,   KEY_F8,   KEY_F9,    KEY_F10,       KEY_F11,          KEY_F12,           KEY_DEL,        KEY_NONE /* mute */,
+    KEY_BACKQUOTE, KEY_1,     KEY_2,    KEY_3,    KEY_4,    KEY_5,    KEY_6,     KEY_7,    KEY_8,    KEY_9,     KEY_0,         KEY_MINUS,        KEY_EQUALS,        KEY_BACKSPACE,  KEY_HOME,
+    KEY_TAB,       KEY_Q,     KEY_W,    KEY_E,    KEY_R,    KEY_T,    KEY_Y,     KEY_U,    KEY_I,    KEY_O,     KEY_P,         KEY_BRACKET_LEFT, KEY_BRACKET_RIGHT, KEY_BACKSLASH,  KEY_PAGE_UP,
+    KEY_CAPS_LOCK, KEY_A,     KEY_S,    KEY_D,    KEY_F,    KEY_G,    KEY_H,     KEY_J,    KEY_K,    KEY_L,     KEY_SEMICOLON, KEY_QUOTE,        KEY_ENTER,         KEY_PAGE_DOWN,  KEY_NONE,
+    KEY_LSHIFT,    KEY_NONE,  KEY_Z,    KEY_X,    KEY_C,    KEY_V,    KEY_B,     KEY_N,    KEY_M,    KEY_COMMA, KEY_PERIOD,    KEY_NONE,         KEY_SLASH,         KEY_RSHIFT,     KEY_ARROW_UP,
+    KEY_LCTRL,     KEY_LMETA, KEY_LALT, KEY_NONE, KEY_NONE, KEY_NONE, KEY_SPACE, KEY_NONE, KEY_NONE, KEY_RMETA, KEY_FN,        KEY_RCTRL,        KEY_ARROW_LEFT,    KEY_ARROW_DOWN, KEY_ARROW_RIGHT,
+];
+
 const layout_get_rows = (layout) => layout[0];
 const layout_get_cols = (layout) => layout[1];
 const layout_get_size = (layout) => layout_get_rows(layout) * layout_get_cols(layout);
@@ -556,6 +565,7 @@ class AsProviderKeychron extends AsProvider
         filters.push({ vendorId: 0x3434, usagePage: 0xFF60, usage: 0x61, productId: 0x0E20 }); // Keychron K2 HE ANSI
         filters.push({ vendorId: 0x3434, usagePage: 0xFF60, usage: 0x61, productId: 0x0E21 }); // Keychron K2 HE ISO
         filters.push({ vendorId: 0x3434, usagePage: 0xFF60, usage: 0x61, productId: 0x0E22 }); // Keychron K2 HE JIS
+        filters.push({ vendorId: 0x362D, usagePage: 0xFF60, usage: 0x61, productId: 0x0610 }); // Lemokey P1 HE ANSI
     }
 
     startListening(handler)
@@ -583,6 +593,10 @@ class AsProviderKeychron extends AsProvider
         else if (this.dev.productId == 0x0B50)
         {
             this.layout = layout_keychron_q5_he;
+        }
+        else if (this.dev.productId == 0x0610)
+        {
+            this.layout = layout_lemokey_p1_he;
         }
         else
         {
