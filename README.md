@@ -16,7 +16,7 @@ JavaScript API for analog keyboard input.
 - Keychron Q3 HE<sup>P, F</sup>
 - Keychron Q5 HE<sup>P, F</sup>
 - Keychron K2 HE<sup>P, F</sup>
-- Keychron Lemokey P1 HE<sup>P, F</sup>
+- Lemokey P1 HE<sup>P, F</sup>
 - Madlions MAD60HE<sup>P</sup>
 - Madlions MAD68HE<sup>P</sup>
 
