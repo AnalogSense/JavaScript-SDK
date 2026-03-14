@@ -1,93 +1,93 @@
 const keys = [
-    { "name": "Escape", "wooting": 0x29, "razer": 0x6E },
-    { "name": "F1", "wooting": 0x3A, "razer": 0x70 },
-    { "name": "F2", "wooting": 0x3B, "razer": 0x71 },
-    { "name": "F3", "wooting": 0x3C, "razer": 0x72 },
-    { "name": "F4", "wooting": 0x3D, "razer": 0x73 },
-    { "name": "F5", "wooting": 0x3E, "razer": 0x74 },
-    { "name": "F6", "wooting": 0x3F, "razer": 0x75 },
-    { "name": "F7", "wooting": 0x40, "razer": 0x76 },
-    { "name": "F8", "wooting": 0x41, "razer": 0x77 },
-    { "name": "F9", "wooting": 0x42, "razer": 0x78 },
-    { "name": "F10", "wooting": 0x43, "razer": 0x79 },
-    { "name": "F11", "wooting": 0x44, "razer": 0x7A },
-    { "name": "F12", "wooting": 0x45, "razer": 0x7B },
-    { "name": "`", "wooting": 0x35, "razer": 0x01 },
-    { "name": "1", "wooting": 0x1E, "razer": 0x02 },
-    { "name": "2", "wooting": 0x1F, "razer": 0x03 },
-    { "name": "3", "wooting": 0x20, "razer": 0x04 },
-    { "name": "4", "wooting": 0x21, "razer": 0x05 },
-    { "name": "5", "wooting": 0x22, "razer": 0x06 },
-    { "name": "6", "wooting": 0x23, "razer": 0x07 },
-    { "name": "7", "wooting": 0x24, "razer": 0x08 },
-    { "name": "8", "wooting": 0x25, "razer": 0x09 },
-    { "name": "9", "wooting": 0x26, "razer": 0x0A },
-    { "name": "0", "wooting": 0x27, "razer": 0x0B },
-    { "name": "-", "wooting": 0x2D, "razer": 0x0C },
-    { "name": "=", "wooting": 0x2E, "razer": 0x0D },
-    { "name": "Backspace", "wooting": 0x2A, "razer": 0x0F },
-    { "name": "Tab", "wooting": 0x2B, "razer": 0x10 },
-    { "name": "Q", "wooting": 0x14, "razer": 0x11 },
-    { "name": "W", "wooting": 0x1A, "razer": 0x12 },
-    { "name": "E", "wooting": 0x08, "razer": 0x13 },
-    { "name": "R", "wooting": 0x15, "razer": 0x14 },
-    { "name": "T", "wooting": 0x17, "razer": 0x15 },
-    { "name": "Y", "wooting": 0x1C, "razer": 0x16 },
-    { "name": "U", "wooting": 0x18, "razer": 0x17 },
-    { "name": "I", "wooting": 0x0C, "razer": 0x18 },
-    { "name": "O", "wooting": 0x12, "razer": 0x19 },
-    { "name": "P", "wooting": 0x13, "razer": 0x1A },
-    { "name": "[", "wooting": 0x2F, "razer": 0x1B },
-    { "name": "]", "wooting": 0x30, "razer": 0x1C },
-    { "name": "Enter", "wooting": 0x28, "razer": 0x2B },
-    { "name": "Caps Lock", "wooting": 0x39, "razer": 0x1E },
-    { "name": "A", "wooting": 0x04, "razer": 0x1F },
-    { "name": "S", "wooting": 0x16, "razer": 0x20 },
-    { "name": "D", "wooting": 0x07, "razer": 0x21 },
-    { "name": "F", "wooting": 0x09, "razer": 0x22 },
-    { "name": "G", "wooting": 0x0A, "razer": 0x23 },
-    { "name": "H", "wooting": 0x0B, "razer": 0x24 },
-    { "name": "J", "wooting": 0x0D, "razer": 0x25 },
-    { "name": "K", "wooting": 0x0E, "razer": 0x26 },
-    { "name": "L", "wooting": 0x0F, "razer": 0x27 },
-    { "name": ";", "wooting": 0x33, "razer": 0x28 },
-    { "name": "'", "wooting": 0x34, "razer": 0x29 },
-    { "name": "Backslash", "wooting": 0x31, "razer": 0x2A },
-    { "name": "Left Shift", "wooting": 0xE1, "razer": 0x2C, "nuphy": 0x200 },
+    { "name": "Escape", "wooting": 0x29, "razer": 0x6E, "bytech": 1 },
+    { "name": "F1", "wooting": 0x3A, "razer": 0x70, "bytech": 2 },
+    { "name": "F2", "wooting": 0x3B, "razer": 0x71, "bytech": 3 },
+    { "name": "F3", "wooting": 0x3C, "razer": 0x72, "bytech": 4 },
+    { "name": "F4", "wooting": 0x3D, "razer": 0x73, "bytech": 5 },
+    { "name": "F5", "wooting": 0x3E, "razer": 0x74, "bytech": 6 },
+    { "name": "F6", "wooting": 0x3F, "razer": 0x75, "bytech": 7 },
+    { "name": "F7", "wooting": 0x40, "razer": 0x76, "bytech": 8 },
+    { "name": "F8", "wooting": 0x41, "razer": 0x77, "bytech": 9 },
+    { "name": "F9", "wooting": 0x42, "razer": 0x78, "bytech": 10 },
+    { "name": "F10", "wooting": 0x43, "razer": 0x79, "bytech": 11 },
+    { "name": "F11", "wooting": 0x44, "razer": 0x7A, "bytech": 12 },
+    { "name": "F12", "wooting": 0x45, "razer": 0x7B, "bytech": 13 },
+    { "name": "`", "wooting": 0x35, "razer": 0x01, "bytech": 14 },
+    { "name": "1", "wooting": 0x1E, "razer": 0x02, "bytech": 15 },
+    { "name": "2", "wooting": 0x1F, "razer": 0x03, "bytech": 16 },
+    { "name": "3", "wooting": 0x20, "razer": 0x04, "bytech": 17 },
+    { "name": "4", "wooting": 0x21, "razer": 0x05, "bytech": 18 },
+    { "name": "5", "wooting": 0x22, "razer": 0x06, "bytech": 19 },
+    { "name": "6", "wooting": 0x23, "razer": 0x07, "bytech": 20 },
+    { "name": "7", "wooting": 0x24, "razer": 0x08, "bytech": 21 },
+    { "name": "8", "wooting": 0x25, "razer": 0x09, "bytech": 22 },
+    { "name": "9", "wooting": 0x26, "razer": 0x0A, "bytech": 23 },
+    { "name": "0", "wooting": 0x27, "razer": 0x0B, "bytech": 24 },
+    { "name": "-", "wooting": 0x2D, "razer": 0x0C, "bytech": 25 },
+    { "name": "=", "wooting": 0x2E, "razer": 0x0D, "bytech": 26 },
+    { "name": "Backspace", "wooting": 0x2A, "razer": 0x0F, "bytech": 27 },
+    { "name": "Tab", "wooting": 0x2B, "razer": 0x10, "bytech": 28 },
+    { "name": "Q", "wooting": 0x14, "razer": 0x11, "bytech": 29 },
+    { "name": "W", "wooting": 0x1A, "razer": 0x12, "bytech": 30 },
+    { "name": "E", "wooting": 0x08, "razer": 0x13, "bytech": 31 },
+    { "name": "R", "wooting": 0x15, "razer": 0x14, "bytech": 32 },
+    { "name": "T", "wooting": 0x17, "razer": 0x15, "bytech": 33 },
+    { "name": "Y", "wooting": 0x1C, "razer": 0x16, "bytech": 34 },
+    { "name": "U", "wooting": 0x18, "razer": 0x17, "bytech": 35 },
+    { "name": "I", "wooting": 0x0C, "razer": 0x18, "bytech": 36 },
+    { "name": "O", "wooting": 0x12, "razer": 0x19, "bytech": 37 },
+    { "name": "P", "wooting": 0x13, "razer": 0x1A, "bytech": 38 },
+    { "name": "[", "wooting": 0x2F, "razer": 0x1B, "bytech": 39 },
+    { "name": "]", "wooting": 0x30, "razer": 0x1C, "bytech": 40 },
+    { "name": "Enter", "wooting": 0x28, "razer": 0x2B, "bytech": 54 },
+    { "name": "Caps Lock", "wooting": 0x39, "razer": 0x1E, "bytech": 42 },
+    { "name": "A", "wooting": 0x04, "razer": 0x1F, "bytech": 43 },
+    { "name": "S", "wooting": 0x16, "razer": 0x20, "bytech": 44 },
+    { "name": "D", "wooting": 0x07, "razer": 0x21, "bytech": 45 },
+    { "name": "F", "wooting": 0x09, "razer": 0x22, "bytech": 46 },
+    { "name": "G", "wooting": 0x0A, "razer": 0x23, "bytech": 47 },
+    { "name": "H", "wooting": 0x0B, "razer": 0x24, "bytech": 48 },
+    { "name": "J", "wooting": 0x0D, "razer": 0x25, "bytech": 49 },
+    { "name": "K", "wooting": 0x0E, "razer": 0x26, "bytech": 50 },
+    { "name": "L", "wooting": 0x0F, "razer": 0x27, "bytech": 51 },
+    { "name": ";", "wooting": 0x33, "razer": 0x28, "bytech": 52 },
+    { "name": "'", "wooting": 0x34, "razer": 0x29, "bytech": 53 },
+    { "name": "Backslash", "wooting": 0x31, "razer": 0x2A, "bytech": 41 },
+    { "name": "Left Shift", "wooting": 0xE1, "razer": 0x2C, "nuphy": 0x200, "bytech": 55 },
     { "name": "Intl Backslash", "wooting": 0x64, "razer": 0x2D },
-    { "name": "Z", "wooting": 0x1D, "razer": 0x2E },
-    { "name": "X", "wooting": 0x1B, "razer": 0x2F },
-    { "name": "C", "wooting": 0x06, "razer": 0x30 },
-    { "name": "V", "wooting": 0x19, "razer": 0x31 },
-    { "name": "B", "wooting": 0x05, "razer": 0x32 },
-    { "name": "N", "wooting": 0x11, "razer": 0x33 },
-    { "name": "M", "wooting": 0x10, "razer": 0x34 },
-    { "name": ",", "wooting": 0x36, "razer": 0x35 },
-    { "name": ".", "wooting": 0x37, "razer": 0x36 },
-    { "name": "/", "wooting": 0x38, "razer": 0x37 },
-    { "name": "Right Shift", "wooting": 0xE5, "razer": 0x39, "nuphy": 0x2000 },
-    { "name": "Left Ctrl", "wooting": 0xE0, "razer": 0x3A, "nuphy": 0x100 },
-    { "name": "Left Meta", "wooting": 0xE3, "razer": 0x7F, "nuphy": 0x800 },
-    { "name": "Left Alt", "wooting": 0xE2, "razer": 0x3C, "nuphy": 0x400 },
-    { "name": "Space", "wooting": 0x2C, "razer": 0x3D },
-    { "name": "Right Alt", "wooting": 0xE6, "razer": 0x3E, "nuphy": 0x4000 },
+    { "name": "Z", "wooting": 0x1D, "razer": 0x2E, "bytech": 56 },
+    { "name": "X", "wooting": 0x1B, "razer": 0x2F, "bytech": 57 },
+    { "name": "C", "wooting": 0x06, "razer": 0x30, "bytech": 58 },
+    { "name": "V", "wooting": 0x19, "razer": 0x31, "bytech": 59 },
+    { "name": "B", "wooting": 0x05, "razer": 0x32, "bytech": 60 },
+    { "name": "N", "wooting": 0x11, "razer": 0x33, "bytech": 61 },
+    { "name": "M", "wooting": 0x10, "razer": 0x34, "bytech": 62 },
+    { "name": ",", "wooting": 0x36, "razer": 0x35, "bytech": 63 },
+    { "name": ".", "wooting": 0x37, "razer": 0x36, "bytech": 64 },
+    { "name": "/", "wooting": 0x38, "razer": 0x37, "bytech": 65 },
+    { "name": "Right Shift", "wooting": 0xE5, "razer": 0x39, "nuphy": 0x2000, "bytech": 66 },
+    { "name": "Left Ctrl", "wooting": 0xE0, "razer": 0x3A, "nuphy": 0x100, "bytech": 67 },
+    { "name": "Left Meta", "wooting": 0xE3, "razer": 0x7F, "nuphy": 0x800, "bytech": 68 },
+    { "name": "Left Alt", "wooting": 0xE2, "razer": 0x3C, "nuphy": 0x400, "bytech": 69 },
+    { "name": "Space", "wooting": 0x2C, "razer": 0x3D, "bytech": 70 },
+    { "name": "Right Alt", "wooting": 0xE6, "razer": 0x3E, "nuphy": 0x4000, "bytech": 71 },
     { "name": "Right Meta", "wooting": 0xE7, "nuphy": 0x8000 },
-    { "name": "Fn", "wooting": 0x409, "razer": 0x3B, "nuphy": 0xff05 },
+    { "name": "Fn", "wooting": 0x409, "razer": 0x3B, "nuphy": 0xff05, "bytech": 72 },
     { "name": "Context Menu", "wooting": 0x65, "razer": 0x81 },
-    { "name": "Right Ctrl", "wooting": 0xE4, "razer": 0x40, "nuphy": 0x1000 },
+    { "name": "Right Ctrl", "wooting": 0xE4, "razer": 0x40, "nuphy": 0x1000, "bytech": 73 },
     { "name": "Print Screen", "wooting": 0x46, "razer": 0x7C },
     { "name": "Pause", "wooting": 0x48, "razer": 0x7D },
     { "name": "Scroll Lock", "wooting": 0x47, "razer": 0x7E },
     { "name": "Insert", "wooting": 0x49, "razer": 0x4B },
-    { "name": "Home", "wooting": 0x4A, "razer": 0x50 },
-    { "name": "Page Up", "wooting": 0x4B, "razer": 0x55 },
-    { "name": "Delete", "wooting": 0x4C, "razer": 0x4C },
+    { "name": "Home", "wooting": 0x4A, "razer": 0x50, "bytech": 100 },
+    { "name": "Page Up", "wooting": 0x4B, "razer": 0x55, "bytech": 102 },
+    { "name": "Delete", "wooting": 0x4C, "razer": 0x4C, "bytech": 99 },
     { "name": "End", "wooting": 0x4D, "razer": 0x51 },
-    { "name": "Page Down", "wooting": 0x4E, "razer": 0x56 },
-    { "name": "Up Arrow", "wooting": 0x52, "razer": 0x53 },
-    { "name": "Left Arrow", "wooting": 0x50, "razer": 0x4F },
-    { "name": "Down Arrow", "wooting": 0x51, "razer": 0x54 },
-    { "name": "Right Arrow", "wooting": 0x4F, "razer": 0x59 },
+    { "name": "Page Down", "wooting": 0x4E, "razer": 0x56, "bytech": 103 },
+    { "name": "Up Arrow", "wooting": 0x52, "razer": 0x53, "bytech": 74 },
+    { "name": "Left Arrow", "wooting": 0x50, "razer": 0x4F, "bytech": 76 },
+    { "name": "Down Arrow", "wooting": 0x51, "razer": 0x54, "bytech": 75 },
+    { "name": "Right Arrow", "wooting": 0x4F, "razer": 0x59, "bytech": 77 },
     { "name": "Num Lock", "wooting": 0x53, "razer": 0x5A },
     { "name": "Numpad /", "wooting": 0x54, "razer": 0x5F },
     { "name": "Numpad *", "wooting": 0x55, "razer": 0x64 },
@@ -109,6 +109,7 @@ const keys = [
 const wooting_to_name = {}; Object.values(keys).forEach(key => wooting_to_name[key.wooting] = key.name);
 const razer_to_wooting = {}; Object.values(keys).forEach(key => razer_to_wooting[key.razer] = key.wooting);
 const nuphy_to_wooting = {}; Object.values(keys).forEach(key => nuphy_to_wooting[key.nuphy ?? key.wooting] = key.wooting);
+const bytech_to_wooting = {}; Object.values(keys).forEach(key => { if ("bytech" in key) bytech_to_wooting[key.bytech] = key.wooting; });
 
 const KEY_NONE = 0;
 const KEY_A = 0x04;
@@ -802,6 +803,70 @@ class AsProviderMadlions extends AsProvider
     }
 }
 
+// by3265h arm chip
+// possibly anything using the hubx.pro web software
+// like: RK68 HE, DAREU COOL68 8K, Redragon K709 HE
+class AsProviderBytech extends AsProvider
+{
+    static populateFilters(filters)
+    {
+        filters.push({ vendorId: 0x372E, productId: 0x105B }); // Redragon K709 HE (K709PLB-RGB-M)
+    }
+
+    _buildPayload(cmd, sub)
+    {
+        const buf = new Uint8Array(63);
+        buf[0] = cmd;
+        buf[1] = sub;
+        let sum = 9;
+        for (let i = 0; i < buf.length - 1; i++) sum += buf[i];
+        buf[buf.length - 1] = 255 - (sum % 256);
+        return buf;
+    }
+
+    startListening(handler)
+    {
+        const _this = this;
+        this.buffer = {};
+
+        const payload = this._buildPayload(0x97, 0x00);
+        this.dev.sendReport(9, payload);
+        this._interval = setInterval(function() { _this.dev.sendReport(9, payload); }, 1000);
+
+        this.dev.oninputreport = function(event)
+        {
+            if (event.data.getUint8(0) === 0x97 && event.data.getUint8(1) === 0x01)
+            {
+                _this.dev.sendReport(9, payload);
+
+                _this.buffer = {};
+                const count = event.data.getUint8(5);
+                for (let i = 0; i < count; i += 4)
+                {
+                    const pos      = (event.data.getUint8(6 + i) << 8) | event.data.getUint8(7 + i);
+                    const distance = (event.data.getUint8(8 + i) << 8) | event.data.getUint8(9 + i);
+                    const scancode = analogsense.bytechScancodeToHidScancode(pos);
+                    if (scancode !== 0 && distance > 10)
+                    {
+                        _this.buffer[scancode] = Math.min(distance / 355, 1.0);
+                    }
+                }
+                handler(_this._bufferToActiveKeys());
+            }
+        };
+    }
+
+    stopListening()
+    {
+        if (this._interval)
+        {
+            clearInterval(this._interval);
+            this._interval = undefined;
+        }
+        this.dev.oninputreport = undefined;
+    }
+}
+
 window.analogsense = {
     providers: [
         AsProviderWooting,
@@ -811,6 +876,7 @@ window.analogsense = {
         AsProviderDrunkdeer,
         AsProviderKeychron,
         AsProviderMadlions,
+        AsProviderBytech,
     ],
     findProviderForDevice: function(dev)
     {
@@ -923,7 +989,7 @@ window.analogsense = {
         {
             return wooting_to_name[scancode];
         }
-        return toString(scancode);
+        return String(Number(scancode));
     },
     razerScancodeToHidScancode: function(scancode)
     {
@@ -941,6 +1007,15 @@ window.analogsense = {
             return nuphy_to_wooting[scancode];
         }
         console.warn("Failed to map NuPhy scancode to HID scancode:", scancode);
+        return 0;
+    },
+    bytechScancodeToHidScancode: function(scancode)
+    {
+        if (scancode in bytech_to_wooting)
+        {
+            return bytech_to_wooting[scancode];
+        }
+        console.warn("Failed to map Bytech scancode to HID scancode:", scancode);
         return 0;
     },
     drunkdeerIndexToHidScancode(i)

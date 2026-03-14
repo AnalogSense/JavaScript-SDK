@@ -20,6 +20,7 @@ JavaScript API for analog keyboard input.
 - Madlions MAD60HE<sup>P</sup>
 - Madlions MAD68HE<sup>P</sup>
 - Madlions MAD68R<sup>P</sup>
+- Redragon K709HE<sup>P</sup>
 
 <sup>R</sup> Razer Synapse needs to be installed and running for analogue inputs to be received from this keyboard.
 
