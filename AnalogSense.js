@@ -810,7 +810,7 @@ class AsProviderBytech extends AsProvider
 {
     static populateFilters(filters)
     {
-        filters.push({ vendorId: 0x372E, productId: 0x105B }); // Redragon K709 HE (K709PLB-RGB-M)
+        filters.push({ vendorId: 0x372E, productId: 0x105B, usagePage: 0xFF00 }); // Redragon K709 HE (K709PLB-RGB-M)
     }
 
     _buildPayload(cmd, sub)
