@@ -733,7 +733,7 @@ class AsProviderMadlions extends AsProvider
 
     startListening(handler)
     {
-        if (this.dev.productId == 0x1055 || this.dev.productId == 0x1056 || this.dev.productId == 0x105D)
+        if (this.dev.productId == 0x1053 || this.dev.productId == 0x1055 || this.dev.productId == 0x1056 || this.dev.productId == 0x105D)
         {
             this.layout = [
                 KEY_ESCAPE,    KEY_1,     KEY_2,    KEY_3,    KEY_4,    KEY_5,    KEY_6,     KEY_7,    KEY_8,    KEY_9,     KEY_0,         KEY_MINUS,        KEY_EQUALS,        KEY_BACKSPACE,
