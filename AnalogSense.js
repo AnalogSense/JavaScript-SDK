@@ -340,7 +340,7 @@ class AsProvider
     }
 }
 
-class AsProviderWooting extends AsProvider
+class AsProviderWootingLegacy extends AsProvider
 {
     static populateFilters(filters)
     {
@@ -363,6 +363,39 @@ class AsProviderWooting extends AsProvider
                 }
                 const value = event.data.getUint8(i++);
                 active_keys.push({ scancode, value: value / 255 });
+            }
+            handler(active_keys);
+        };
+    }
+
+    stopListening()
+    {
+        this.dev.oninputreport = undefined;
+    }
+}
+
+class AsProviderWooting extends AsProvider
+{
+    //wooting boards with Analog Interface v2 firmware (v5.3.0+)
+    static populateFilters(filters)
+    {
+        filters.push({ usagePage: 0xFF53, vendorId: 0x31E3 });
+    }
+
+    startListening(handler)
+    {
+        this.dev.oninputreport = function(event)
+        {
+            const active_keys = [];
+            for (let i = 0; i + 3 < event.data.byteLength; i += 4)
+            {
+                const scancode = event.data.getUint8(i + 1);
+                if (scancode == 0)
+                {
+                    break;
+                }
+                const value = (event.data.getUint8(i + 3) << 8) | event.data.getUint8(i + 2);
+                active_keys.push({ scancode, value: value / 65535 });
             }
             handler(active_keys);
         };
@@ -871,6 +904,7 @@ class AsProviderBytech extends AsProvider
 window.analogsense = {
     providers: [
         AsProviderWooting,
+        AsProviderWootingLegacy,
         AsProviderRazerHuntsman,
         AsProviderRazerHuntsmanV3,
         AsProviderNuphy,
