@@ -342,6 +342,7 @@ class AsProvider
 
 class AsProviderWootingLegacy extends AsProvider
 {
+    //wooting boards with Analog Interface v1 firmware (v5.2.4)
     static populateFilters(filters)
     {
         filters.push({ usagePage: 0xFF54, vendorId: 0x31E3 });
