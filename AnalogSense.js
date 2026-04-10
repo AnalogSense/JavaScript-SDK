@@ -72,10 +72,7 @@ const keys = [
     { "name": "Space", "wooting": 0x2C, "razer": 0x3D, "bytech": 70 },
     { "name": "Right Alt", "wooting": 0xE6, "razer": 0x3E, "nuphy": 0x4000, "bytech": 71 },
     { "name": "Right Meta", "wooting": 0xE7, "nuphy": 0x8000 },
-    { "name": "Fn", "wooting": 0x409, "wooting_v2": 0xAD09, "razer": 0x3B, "nuphy": 0xff05, "bytech": 72 },
-    { "name": "Prev Track", "wooting_v2": 0x67B6 },
-    { "name": "Play/Pause", "wooting_v2": 0x69B5 },
-    { "name": "Next Track", "wooting_v2": 0x68CD },
+    { "name": "Fn", "wooting": 0x409, "razer": 0x3B, "nuphy": 0xff05, "bytech": 72 },
     { "name": "Context Menu", "wooting": 0x65, "razer": 0x81 },
     { "name": "Right Ctrl", "wooting": 0xE4, "razer": 0x40, "nuphy": 0x1000, "bytech": 73 },
     { "name": "Print Screen", "wooting": 0x46, "razer": 0x7C },
@@ -109,13 +106,8 @@ const keys = [
     { "name": "Numpad 0", "wooting": 0x62, "razer": 0x63 },
     { "name": "Numpad .", "wooting": 0x63, "razer": 0x68 }
 ];
-const wooting_to_name = {}; Object.values(keys).forEach(key => { if ("wooting" in key) wooting_to_name[key.wooting] = key.name; });
-const wooting_v2_to_name = {}; Object.values(keys).forEach(key => {
-    if ("wooting_v2" in key) {
-        wooting_v2_to_name[key.wooting_v2] = key.name;
-    }
-});
-const razer_to_wooting = {}; Object.values(keys).forEach(key => { if ("razer" in key) razer_to_wooting[key.razer] = key.wooting; });
+const wooting_to_name = {}; Object.values(keys).forEach(key => wooting_to_name[key.wooting] = key.name);
+const razer_to_wooting = {}; Object.values(keys).forEach(key => razer_to_wooting[key.razer] = key.wooting);
 const nuphy_to_wooting = {}; Object.values(keys).forEach(key => nuphy_to_wooting[key.nuphy ?? key.wooting] = key.wooting);
 const bytech_to_wooting = {}; Object.values(keys).forEach(key => { if ("bytech" in key) bytech_to_wooting[key.bytech] = key.wooting; });
 
@@ -348,70 +340,58 @@ class AsProvider
     }
 }
 
-class AsProviderWootingLegacy extends AsProvider
-{
-    //wooting boards with Analog Interface v1 firmware (v5.2.4)
-    static populateFilters(filters)
-    {
-        filters.push({ usagePage: 0xFF54, vendorId: 0x31E3 });
+class AsProviderWooting extends AsProvider {
+    static populateFilters(filters) {
+        filters.push({ usagePage: 0xFF54, vendorId: 0x31E3 }); // analog interface v1
+        filters.push({ usagePage: 0xFF53, vendorId: 0x31E3 }); // analog interface v2
         filters.push({ usagePage: 0xFF54, vendorId: 0x03EB, productId: 0xFF01 }); // Wooting One with old firmware
         filters.push({ usagePage: 0xFF54, vendorId: 0x03EB, productId: 0xFF02 }); // Wooting Two with old firmware
     }
 
-    startListening(handler)
-    {
-        this.dev.oninputreport = function(event)
-        {
-            const active_keys = [];
-            for (let i = 0; i < event.data.byteLength; )
-            {
-                const scancode = (event.data.getUint8(i++) << 8) | event.data.getUint8(i++);
-                if (scancode == 0)
-                {
-                    break;
+    startListening(handler) {
+        const isV2 = this.dev.collections.some(c => c.usagePage === 0xFF53);
+
+        if (isV2) {
+            this.dev.oninputreport = function (event) {
+                const active_keys = [];
+                const data = event.data;
+                //each entry is 4 bytes (pos, keycode, namespace + analog lo, analog depth
+                //namespace 0 are regular hid keys, non zero are media keys
+                //analog value is 10bit 0 to1023
+                for (let i = 0; i + 3 < data.byteLength; i += 4) {
+                    const matrix_pos = data.getUint8(i);
+                    const scancode_lo = data.getUint8(i + 1);
+                    if (scancode_lo === 0) break;
+                    const packed = data.getUint8(i + 2);
+                    const value_hi = data.getUint8(i + 3);
+
+                    const scancode_hi = (packed >> 2) & 0xf;
+                    const value_lo = (packed >> 6) & 0x3;
+
+                    const scancode = (scancode_hi << 8) | scancode_lo;
+                    const value = (value_hi << 2) | value_lo;
+
+                    active_keys.push({ scancode, value: value / 1023 });
                 }
-                const value = event.data.getUint8(i++);
-                active_keys.push({ scancode, value: value / 255 });
-            }
-            handler(active_keys);
-        };
-    }
-
-    stopListening()
-    {
-        this.dev.oninputreport = undefined;
-    }
-}
-
-class AsProviderWooting extends AsProvider
-{
-    //wooting boards with Analog Interface v2 firmware (v5.3.0+)
-    static populateFilters(filters)
-    {
-        filters.push({ usagePage: 0xFF53, vendorId: 0x31E3 });
-    }
-
-    startListening(handler)
-    {
-        this.dev.oninputreport = function(event)
-        {
-            const active_keys = [];
-            for (let i = 0; i + 3 < event.data.byteLength; i += 4)
-            {
-                const scancode = (event.data.getUint8(i) << 8) | event.data.getUint8(i + 1);
-                if (scancode == 0)
-                {
-                    break;
+                handler(active_keys);
+            };
+        }
+        else {
+            //v1 big eddie u16 scancodes , u8 value, up to 16 keys
+            this.dev.oninputreport = function (event) {
+                const active_keys = [];
+                for (let i = 0; i < event.data.byteLength;) {
+                    const scancode = (event.data.getUint8(i++) << 8) | event.data.getUint8(i++);
+                    if (scancode == 0) break;
+                    const value = event.data.getUint8(i++);
+                    active_keys.push({ scancode, value: value / 255 });
                 }
-                const value = (event.data.getUint8(i + 3) << 8) | event.data.getUint8(i + 2);
-                active_keys.push({ scancode, value: value / 65535 });
-            }
-            handler(active_keys);
-        };
+                handler(active_keys);
+            };
+        }
     }
 
-    stopListening()
-    {
+    stopListening() {
         this.dev.oninputreport = undefined;
     }
 }
@@ -913,7 +893,6 @@ class AsProviderBytech extends AsProvider
 window.analogsense = {
     providers: [
         AsProviderWooting,
-        AsProviderWootingLegacy,
         AsProviderRazerHuntsman,
         AsProviderRazerHuntsmanV3,
         AsProviderNuphy,
@@ -1032,15 +1011,6 @@ window.analogsense = {
         if (scancode in wooting_to_name)
         {
             return wooting_to_name[scancode];
-        }
-        if (scancode in wooting_v2_to_name)
-        {
-            return wooting_v2_to_name[scancode];
-        }
-        const lowByte = scancode & 0xFF;
-        if (lowByte in wooting_to_name)
-        {
-            return wooting_to_name[lowByte];
         }
         return String(Number(scancode));
     },
