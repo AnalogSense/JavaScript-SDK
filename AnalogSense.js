@@ -340,58 +340,77 @@ class AsProvider
     }
 }
 
-class AsProviderWooting extends AsProvider {
-    static populateFilters(filters) {
-        filters.push({ usagePage: 0xFF54, vendorId: 0x31E3 }); // analog interface v1
-        filters.push({ usagePage: 0xFF53, vendorId: 0x31E3 }); // analog interface v2
-        filters.push({ usagePage: 0xFF54, vendorId: 0x03EB, productId: 0xFF01 }); // Wooting One with old firmware
-        filters.push({ usagePage: 0xFF54, vendorId: 0x03EB, productId: 0xFF02 }); // Wooting Two with old firmware
+//wooting analog interface v1
+class AsProviderWootingV1 extends AsProvider
+{
+    static populateFilters(filters)
+    {
+        filters.push({ usagePage: 0xFF54, vendorId: 0x31E3 });
+        filters.push({ usagePage: 0xFF54, vendorId: 0x03EB, productId: 0xFF01 }); // Wooting One old firmware
+        filters.push({ usagePage: 0xFF54, vendorId: 0x03EB, productId: 0xFF02 }); // Wooting Two old firmware
     }
 
-    startListening(handler) {
-        const isV2 = this.dev.collections.some(c => c.usagePage === 0xFF53);
-
-        if (isV2) {
-            this.dev.oninputreport = function (event) {
-                const active_keys = [];
-                const data = event.data;
-                //each entry is 4 bytes (pos, keycode, namespace + analog lo, analog depth
-                //namespace 0 are regular hid keys, non zero are media keys
-                //analog value is 10bit 0 to1023
-                for (let i = 0; i + 3 < data.byteLength; i += 4) {
-                    const matrix_pos = data.getUint8(i);
-                    const scancode_lo = data.getUint8(i + 1);
-                    if (scancode_lo === 0) break;
-                    const packed = data.getUint8(i + 2);
-                    const value_hi = data.getUint8(i + 3);
-
-                    const scancode_hi = (packed >> 2) & 0xf;
-                    const value_lo = (packed >> 6) & 0x3;
-
-                    const scancode = (scancode_hi << 8) | scancode_lo;
-                    const value = (value_hi << 2) | value_lo;
-
-                    active_keys.push({ scancode, value: value / 1023 });
-                }
-                handler(active_keys);
-            };
-        }
-        else {
-            //v1 big eddie u16 scancodes , u8 value, up to 16 keys
-            this.dev.oninputreport = function (event) {
-                const active_keys = [];
-                for (let i = 0; i < event.data.byteLength;) {
-                    const scancode = (event.data.getUint8(i++) << 8) | event.data.getUint8(i++);
-                    if (scancode == 0) break;
-                    const value = event.data.getUint8(i++);
-                    active_keys.push({ scancode, value: value / 255 });
-                }
-                handler(active_keys);
-            };
-        }
+    startListening(handler)
+    {
+        //v1 big eddie u16 scancodes , u8 value, up to 16 keys
+        this.dev.oninputreport = function(event)
+        {
+            const active_keys = [];
+            for (let i = 0; i < event.data.byteLength; )
+            {
+                const scancode = (event.data.getUint8(i++) << 8) | event.data.getUint8(i++);
+                if (scancode == 0) break;
+                const value = event.data.getUint8(i++);
+                active_keys.push({ scancode, value: value / 255 });
+            }
+            handler(active_keys);
+        };
     }
 
-    stopListening() {
+    stopListening()
+    {
+        this.dev.oninputreport = undefined;
+    }
+}
+
+//wooting analog interface v2 (firmware 2.13.0 and up | wootility 5.3.0 and up)
+class AsProviderWootingV2 extends AsProvider
+{
+    static populateFilters(filters)
+    {
+        filters.push({ usagePage: 0xFF53, vendorId: 0x31E3 });
+    }
+
+    startListening(handler)
+    {
+        this.dev.oninputreport = function(event)
+        {
+            const active_keys = [];
+            const data = event.data;
+            //each entry is 4 bytes (pos, keycode, namespace + analog lo, analog depth
+            //namespace 0 are regular hid keys, non zero are media keys
+            //analog value is 10bit 0 to1023
+            for (let i = 0; i + 4 <= data.byteLength; i += 4)
+            {
+                const keycode      = data.getUint8(i + 1);
+                if (keycode === 0) break;
+                const packed       = data.getUint8(i + 2);
+                const value_hi     = data.getUint8(i + 3);
+
+                const keyNamespace = (packed >> 2) & 0xf;
+                const value_lo     = (packed >> 6) & 0x3;
+
+                const scancode = (keyNamespace << 8) | keycode;
+                const value    = (value_hi << 2) | value_lo;
+
+                active_keys.push({ scancode, value: value / 1023 });
+            }
+            handler(active_keys);
+        };
+    }
+
+    stopListening()
+    {
         this.dev.oninputreport = undefined;
     }
 }
@@ -892,7 +911,8 @@ class AsProviderBytech extends AsProvider
 
 window.analogsense = {
     providers: [
-        AsProviderWooting,
+        AsProviderWootingV1,
+        AsProviderWootingV2,
         AsProviderRazerHuntsman,
         AsProviderRazerHuntsmanV3,
         AsProviderNuphy,
