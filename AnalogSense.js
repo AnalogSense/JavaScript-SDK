@@ -72,7 +72,10 @@ const keys = [
     { "name": "Space", "wooting": 0x2C, "razer": 0x3D, "bytech": 70 },
     { "name": "Right Alt", "wooting": 0xE6, "razer": 0x3E, "nuphy": 0x4000, "bytech": 71 },
     { "name": "Right Meta", "wooting": 0xE7, "nuphy": 0x8000 },
-    { "name": "Fn", "wooting": 0x409, "razer": 0x3B, "nuphy": 0xff05, "bytech": 72 },
+    { "name": "Fn", "wooting": 0x409, "wooting_v2": 0xAD09, "razer": 0x3B, "nuphy": 0xff05, "bytech": 72 },
+    { "name": "Prev Track", "wooting_v2": 0x67B6 },
+    { "name": "Play/Pause", "wooting_v2": 0x69B5 },
+    { "name": "Next Track", "wooting_v2": 0x68CD },
     { "name": "Context Menu", "wooting": 0x65, "razer": 0x81 },
     { "name": "Right Ctrl", "wooting": 0xE4, "razer": 0x40, "nuphy": 0x1000, "bytech": 73 },
     { "name": "Print Screen", "wooting": 0x46, "razer": 0x7C },
@@ -106,8 +109,13 @@ const keys = [
     { "name": "Numpad 0", "wooting": 0x62, "razer": 0x63 },
     { "name": "Numpad .", "wooting": 0x63, "razer": 0x68 }
 ];
-const wooting_to_name = {}; Object.values(keys).forEach(key => wooting_to_name[key.wooting] = key.name);
-const razer_to_wooting = {}; Object.values(keys).forEach(key => razer_to_wooting[key.razer] = key.wooting);
+const wooting_to_name = {}; Object.values(keys).forEach(key => { if ("wooting" in key) wooting_to_name[key.wooting] = key.name; });
+const wooting_v2_to_name = {}; Object.values(keys).forEach(key => {
+    if ("wooting_v2" in key) {
+        wooting_v2_to_name[key.wooting_v2] = key.name;
+    }
+});
+const razer_to_wooting = {}; Object.values(keys).forEach(key => { if ("razer" in key) razer_to_wooting[key.razer] = key.wooting; });
 const nuphy_to_wooting = {}; Object.values(keys).forEach(key => nuphy_to_wooting[key.nuphy ?? key.wooting] = key.wooting);
 const bytech_to_wooting = {}; Object.values(keys).forEach(key => { if ("bytech" in key) bytech_to_wooting[key.bytech] = key.wooting; });
 
@@ -390,7 +398,7 @@ class AsProviderWooting extends AsProvider
             const active_keys = [];
             for (let i = 0; i + 3 < event.data.byteLength; i += 4)
             {
-                const scancode = event.data.getUint8(i + 1);
+                const scancode = (event.data.getUint8(i) << 8) | event.data.getUint8(i + 1);
                 if (scancode == 0)
                 {
                     break;
@@ -1024,6 +1032,15 @@ window.analogsense = {
         if (scancode in wooting_to_name)
         {
             return wooting_to_name[scancode];
+        }
+        if (scancode in wooting_v2_to_name)
+        {
+            return wooting_v2_to_name[scancode];
+        }
+        const lowByte = scancode & 0xFF;
+        if (lowByte in wooting_to_name)
+        {
+            return wooting_to_name[lowByte];
         }
         return String(Number(scancode));
     },
