@@ -389,11 +389,10 @@ class AsProviderWootingV2 extends AsProvider
             const data = event.data;
             //each entry is 4 bytes (pos, keycode, namespace + analog lo, analog depth
             //namespace 0 are regular hid keys, non zero are media keys
-            //analog value is 10bit 0 to1023
+            //analog value is 10bit 0 to 1023
             for (let i = 0; i + 4 <= data.byteLength; i += 4)
             {
                 const keycode      = data.getUint8(i + 1);
-                if (keycode === 0) break;
                 const packed       = data.getUint8(i + 2);
                 const value_hi     = data.getUint8(i + 3);
 
@@ -402,6 +401,9 @@ class AsProviderWootingV2 extends AsProvider
 
                 const scancode = (keyNamespace << 8) | keycode;
                 const value    = (value_hi << 2) | value_lo;
+
+                if (keyNamespace === 0 && keycode === 0) break;
+                if (value === 0) continue;
 
                 active_keys.push({ scancode, value: value / 1023 });
             }
