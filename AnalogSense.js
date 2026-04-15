@@ -402,7 +402,7 @@ class AsProviderWootingV2 extends AsProvider
                 const scancode = (keyNamespace << 8) | keycode;
                 const value    = (value_hi << 2) | value_lo;
 
-                if (keyNamespace === 0 && keycode === 0) break;
+                if (scancode === 0) break;
                 if (value === 0) continue;
 
                 active_keys.push({ scancode, value: value / 1023 });
