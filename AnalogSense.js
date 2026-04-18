@@ -911,6 +911,39 @@ class AsProviderBytech extends AsProvider
     }
 }
 
+// needs web driver or software driver open and Simulation turned on via Config > Magnetic Switch Settings  to register the keys.
+class AsProviderMonsgeek extends AsProvider {
+	static populateFilters(filters) {
+        // Fun60Ultra (TMR Variant)
+        filters.push({ vendorId: 0x3151, productId: 0x5030, usagePage: 12, usage: 1 });
+	}
+
+	startListening(handler) {
+		const _this = this;
+		this.buffer = {};
+
+		this.dev.oninputreport = function (event) {
+            const raw = event.data.getUint16(2);
+            const key = raw & 0x00FF;
+            const analog = event.data.getUint16(1, true);
+            const analogHigh = raw >> 8;
+
+            const scancode = analogsense.monsgeekScancodeToHidScancode(key);
+            if (analog === 0) {
+            delete _this.buffer[scancode];
+            } else {
+                    _this.buffer[scancode] = analog / 340;
+            }
+
+            handler(_this._bufferToActiveKeys());
+        }
+	};
+
+	stopListening() {
+		this.dev.oninputreport = undefined;
+	}
+};
+
 window.analogsense = {
     providers: [
         AsProviderWootingV1,
@@ -922,6 +955,7 @@ window.analogsense = {
         AsProviderKeychron,
         AsProviderMadlions,
         AsProviderBytech,
+        AsProviderMonsgeek,
     ],
     findProviderForDevice: function(dev)
     {
@@ -1034,7 +1068,7 @@ window.analogsense = {
         {
             return wooting_to_name[scancode];
         }
-        return String(Number(scancode));
+        return Number.isFinite(Number(scancode)) ? String(Number(scancode)) : String(scancode);
     },
     razerScancodeToHidScancode: function(scancode)
     {
@@ -1157,5 +1191,22 @@ window.analogsense = {
         }
         console.warn("Failed to map DrunkDeer key to HID scancode:", i);
         return 0;
-    }
+    },
+    monsgeekScancodeToHidScancode(scancode) 
+    {
+        //Fun60Ultra TMR Variant keymap
+        const monsgeek_keys = {
+        0x0001: "Escape",       0x0007: "1",0x000d: "2",0x0013: "3",0x0019: "4",0x001f: "5",0x0025: "6",0x002b: "7",0x0031: "8",0x0037: "9",0x003d: "0",0x0043: "-",0x0049: "=",0x004f: "Backspace",
+        0x0002: "Tab",          0x0008: "Q",0x000e: "W",0x0014: "E",0x001a: "R",0x0020: "T",0x0026: "Y",0x002c: "U",0x0050: "I",0x0038: "O",0x003e: "P",0x0044: "[",0x004a: "]",0x0032: "Backslash",
+        0x0003: "Caps Lock",    0x0009: "A",0x000f: "S",0x0015: "D",0x001b: "F",0x0021: "G",0x0027: "H",0x002d: "J",0x0033: "K",0x0039: "L",0x003f: ";",0x0045: "'",0x0051: "Enter",
+        0x0004: "Left Shift",   0x0010: "Z",0x0016: "X",0x001c: "C",0x0022: "V",0x0028: "B",0x002e: "N",0x0034: "M",0x003a: ",",0x0040: ".",0x0046: "/",0x004c: "Right Shift",
+        0x0005: "Left Ctrl",    0x0011: "Left Meta",    0x0017: "Left Alt",         0x0029: "Space",        0x003b: "Right Alt",    0x0041: "Fn",   0x0047: "Context Menu",     0x004d: "Right Ctrl",
+        };
+
+        if (scancode in monsgeek_keys) {
+            return monsgeek_keys[scancode];
+        }
+        console.warn("Failed to map Monsgeek key to HID scancode:", scancode);
+        return 0;
+        }
 };
