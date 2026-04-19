@@ -938,11 +938,7 @@ class AsProviderMonsgeek extends AsProvider {
         buf[1] = on ? 0x01 : 0x00;
         buf[2] = on ? 0xe3 : 0xe4;
 
-        try{
-            await this.controlDev.sendFeatureReport(0, buf)
-        } catch (err) {
-            console.error("Error sending feature report on usagePage:" + this.controlDev.collections[0].usagePage + " usage:" + this.controlDev.collections[0].usage, err);
-        }
+        await this.controlDev.sendFeatureReport(0, buf).catch(console.error);
     }
 
 	startListening(handler) {
@@ -1057,7 +1053,7 @@ window.analogsense = {
                     {
                         await dev.open();
                     }
-                     if (provider === AsProviderMonsgeek)
+                    if (provider === AsProviderMonsgeek)
                     {
                         let existing = result.find(p => p instanceof AsProviderMonsgeek);
 
@@ -1090,6 +1086,7 @@ window.analogsense = {
                 provider.populateFilters(filters);
             }
             const devices = await navigator.hid.requestDevice({ filters });
+            const monsgeekDevs = [];
             for (const dev of devices)
             {
                 const provider = analogsense.findProviderForDevice(dev);
@@ -1099,8 +1096,31 @@ window.analogsense = {
                     {
                         await dev.open();
                     }
-                    return new provider(dev);
+                    if (provider === AsProviderMonsgeek)
+                    {
+                        monsgeekDevs.push(dev);
+                    }
+                    else
+                    {
+                        return new provider(dev);
+                    }
                 }
+            }
+            if (monsgeekDevs.length > 0)
+            {
+                const provider = new AsProviderMonsgeek(monsgeekDevs[0]);
+                for (const dev of monsgeekDevs)
+                {
+                    if (dev.collections?.some(c => c.usagePage === 65535 && c.usage === 2))
+                    {
+                        provider.controlDev = dev;
+                    }
+                    else
+                    {
+                        provider.inputDev = dev;
+                    }
+                }
+                return provider;
             }
         }
         else
