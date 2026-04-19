@@ -911,18 +911,47 @@ class AsProviderBytech extends AsProvider
     }
 }
 
-// needs web driver or software driver open and Simulation turned on via Config > Magnetic Switch Settings  to register the keys.
 class AsProviderMonsgeek extends AsProvider {
+    constructor(dev)
+    {
+        super(dev);
+
+        if (dev.collections?.some(c => c.usagePage === 65535 && c.usage === 2))
+        {
+            this.controlDev = dev;
+        }
+        else
+        {
+            this.inputDev = dev;
+        }
+    }
+
 	static populateFilters(filters) {
         // Fun60Ultra (TMR Variant)
-        filters.push({ vendorId: 0x3151, productId: 0x5030, usagePage: 12, usage: 1 });
+        filters.push({ vendorId: 0x3151, productId: 0x5030, usagePage: 0xFFFF }); // input stream; specifically, usagePage: 12, usage: 1
+        filters.push({ vendorId: 0x3151, productId: 0x5030, usagePage: 0xFFFF, usage: 2 }); // control interface; specifically, usagePage: 65535
 	}
+
+    async _setSimulationMode(on = true) {
+        const buf = new Uint8Array(65);
+        buf[0] = 0x1b;
+        buf[1] = on ? 0x01 : 0x00;
+        buf[2] = on ? 0xe3 : 0xe4;
+
+        try{
+            await this.controlDev.sendFeatureReport(0, buf)
+        } catch (err) {
+            console.error("Error sending feature report on usagePage:" + this.controlDev.collections[0].usagePage + " usage:" + this.controlDev.collections[0].usage, err);
+        }
+    }
 
 	startListening(handler) {
 		const _this = this;
 		this.buffer = {};
 
-		this.dev.oninputreport = function (event) {
+        this._setSimulationMode(true);
+
+		this.inputDev.oninputreport = function (event) {
             const raw = event.data.getUint16(2);
             const key = raw & 0x00FF;
             const analog = event.data.getUint16(1, true);
@@ -940,7 +969,8 @@ class AsProviderMonsgeek extends AsProvider {
 	};
 
 	stopListening() {
-		this.dev.oninputreport = undefined;
+        this._setSimulationMode(false);
+		this.inputDev.oninputreport = undefined;
 	}
 };
 
@@ -1026,6 +1056,23 @@ window.analogsense = {
                     if (!dev.opened)
                     {
                         await dev.open();
+                    }
+                     if (provider === AsProviderMonsgeek)
+                    {
+                        let existing = result.find(p => p instanceof AsProviderMonsgeek);
+
+                        if (existing)
+                        {
+                            if (dev.collections?.some(c => c.usagePage === 65535 && c.usage === 2))
+                            {
+                                existing.controlDev = dev;
+                            }
+                            else
+                            {
+                                existing.inputDev = dev;
+                            }
+                            continue;
+                        }
                     }
                     result.push(new provider(dev));
                 }
