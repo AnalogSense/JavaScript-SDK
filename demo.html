@@ -48,6 +48,7 @@
                         const bar = document.createElement("div");
                         bar.className = "progress-bar";
                         bar.style.width = (key.value * 100) + "%";
+                        bar.style.backgroundColor = key.actuated ? "#7e28bf" : "";
                         bar.textContent = analogsense.scancodeToString(key.scancode);
                         div.appendChild(bar);
                     }
