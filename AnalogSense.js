@@ -334,7 +334,7 @@ class AsProvider
         const active_keys = [];
         for (const [scancode, value] of Object.entries(this.buffer))
         {
-            active_keys.push({ scancode, value });
+            active_keys.push({ scancode, value, actuated: null });
         }
         return active_keys;
     }
@@ -361,7 +361,7 @@ class AsProviderWootingV1 extends AsProvider
                 const scancode = (event.data.getUint8(i++) << 8) | event.data.getUint8(i++);
                 if (scancode == 0) break;
                 const value = event.data.getUint8(i++);
-                active_keys.push({ scancode, value: value / 255 });
+                active_keys.push({ scancode, value: value / 255, actuated: null });
             }
             handler(active_keys);
         };
@@ -396,6 +396,7 @@ class AsProviderWootingV2 extends AsProvider
                 const packed       = data.getUint8(i + 2);
                 const value_hi     = data.getUint8(i + 3);
 
+                const actuated      = packed & 0x1;
                 const keyNamespace = (packed >> 2) & 0xf;
                 const value_lo     = (packed >> 6) & 0x3;
 
@@ -405,7 +406,7 @@ class AsProviderWootingV2 extends AsProvider
                 if (scancode === 0) break;
                 if (value === 0) continue;
 
-                active_keys.push({ scancode, value: value / 1023 });
+                active_keys.push({ scancode, value: value / 1023, actuated });
             }
             handler(active_keys);
         };
@@ -442,7 +443,8 @@ class AsProviderRazerHuntsman extends AsProvider
                     const value = event.data.getUint8(i++);
                     active_keys.push({
                         scancode: analogsense.razerScancodeToHidScancode(scancode),
-                        value: value / 255
+                        value: value / 255,
+                        actuated: null
                     });
                 }
                 handler(active_keys);
@@ -483,7 +485,8 @@ class AsProviderRazerHuntsmanV3 extends AsProvider
                     i++; // unclear, might be something like "priority."
                     active_keys.push({
                         scancode: analogsense.razerScancodeToHidScancode(scancode),
-                        value: value / 255
+                        value: value / 255,
+                        actuated: null
                     });
                 }
                 handler(active_keys);
@@ -575,7 +578,8 @@ class AsProviderDrunkdeer extends AsProvider
                 {
                     this.active_keys.push({
                         scancode: analogsense.drunkdeerIndexToHidScancode((n * (64 - 5)) + (i - 4)),
-                        value: value / 40
+                        value: value / 40,
+                        actuated: null
                     });
                 }
             }
