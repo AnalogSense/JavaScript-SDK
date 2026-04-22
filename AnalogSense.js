@@ -762,6 +762,7 @@ class AsProviderMadlions extends AsProvider
     {
         // MAD60HE
         filters.push({ vendorId: 0x373b, usagePage: 0xFF60, usage: 0x61, productId: 0x1053 });
+        filters.push({ vendorId: 0x373b, usagePage: 0xFF60, usage: 0x61, productId: 0x1054 });
         filters.push({ vendorId: 0x373b, usagePage: 0xFF60, usage: 0x61, productId: 0x1055 });
         filters.push({ vendorId: 0x373b, usagePage: 0xFF60, usage: 0x61, productId: 0x1056 });
         filters.push({ vendorId: 0x373b, usagePage: 0xFF60, usage: 0x61, productId: 0x105D });
