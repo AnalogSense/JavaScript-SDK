@@ -386,28 +386,48 @@ class AsProviderWootingV2 extends AsProvider
         this.dev.oninputreport = function(event)
         {
             const active_keys = [];
+            const features_by_pos = {};
             const data = event.data;
             //each entry is 4 bytes (pos, keycode, namespace + analog lo, analog depth
             //namespace 0 are regular hid keys, non zero are media keys
             //analog value is 10bit 0 to 1023
+            //
+            //namespace 6 are `advanced keys` (like socd dks etc etc)
+            //with which we can check if the user has configured eg socd on them or nah
             for (let i = 0; i + 4 <= data.byteLength; i += 4)
             {
-                const keycode      = data.getUint8(i + 1);
-                const packed       = data.getUint8(i + 2);
-                const value_hi     = data.getUint8(i + 3);
+                const matrix_pos    = data.getUint8(i + 0);
+                const keycode       = data.getUint8(i + 1);
+                const packed        = data.getUint8(i + 2);
+                const value_hi      = data.getUint8(i + 3);
 
-                const actuated      = packed & 0x1;
-                const keyNamespace = (packed >> 2) & 0xf;
-                const value_lo     = (packed >> 6) & 0x3;
+                const actuated      = (packed & 0x1) !== 0;
+                const key_namespace = (packed >> 2) & 0xf;
+                const value_lo      = (packed >> 6) & 0x3;
+                const value         = (value_hi << 2) | value_lo;
 
-                const scancode = (keyNamespace << 8) | keycode;
-                const value    = (value_hi << 2) | value_lo;
-
-                if (scancode === 0) break;
+                if (matrix_pos === 0 && keycode === 0) break;
                 if (value === 0) continue;
 
-                active_keys.push({ scancode, value: value / 1023, actuated });
+                if (key_namespace === 6)
+                {
+                    if (!features_by_pos[matrix_pos]) features_by_pos[matrix_pos] = {};
+                    //if (keycode === 0x01) features_by_pos[matrix_pos].dks          = true; //needs different handling
+                    //if (keycode === 0x02) features_by_pos[matrix_pos].mod_tap      = true; //needs different handling
+                    //if (keycode === 0x03) features_by_pos[matrix_pos].toggle       = true; //needs different handling
+                    if (keycode === 0x04) features_by_pos[matrix_pos].rapid_snappy = true;
+                    if (keycode === 0x05) features_by_pos[matrix_pos].socd         = true;
+                }
+                else if (key_namespace === 0)
+                {
+                    active_keys.push({
+                        scancode: keycode,
+                        value:    value / 1023,
+                        extra:    { actuated, ...features_by_pos[matrix_pos] },
+                    });
+                }
             }
+
             handler(active_keys);
         };
     }
