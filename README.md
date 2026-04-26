@@ -43,7 +43,7 @@ Once loaded, the following global functions become available:
 - `analogsense.scancodeToString(scancode: number): string`
 
 A device instance has the following members:
-- `startListening(handler: function<void({scancode: int, value: float}[])>)`
+- `startListening(handler: function<void({scancode: int, value: float, extra: {actuated: bool, socd: bool, rappy_snappy: bool} | null}[])>)`
 - `stopListening()`
 - `getProductName(): string`
 - `forget()`

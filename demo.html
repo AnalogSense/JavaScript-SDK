@@ -48,7 +48,10 @@
                         const bar = document.createElement("div");
                         bar.className = "progress-bar";
                         bar.style.width = (key.value * 100) + "%";
+                        bar.style.backgroundColor = key.extra?.actuated ? "#7e28bf" : "";
                         bar.textContent = analogsense.scancodeToString(key.scancode);
+                        if (key.extra?.socd)         bar.textContent += " (socd enabled)";
+                        if (key.extra?.rappy_snappy) bar.textContent += " (rappy snappy enabled)";
                         div.appendChild(bar);
                     }
                     document.getElementById("active-keys").appendChild(div);
