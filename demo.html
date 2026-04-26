@@ -51,7 +51,7 @@
                         bar.style.backgroundColor = key.extra?.actuated ? "#7e28bf" : "";
                         bar.textContent = analogsense.scancodeToString(key.scancode);
                         if (key.extra?.socd)         bar.textContent += " (socd enabled)";
-                        if (key.extra?.rapid_snappy) bar.textContent += " (rapid snappy enabled)";
+                        if (key.extra?.rappy_snappy) bar.textContent += " (rappy snappy enabled)";
                         div.appendChild(bar);
                     }
                     document.getElementById("active-keys").appendChild(div);

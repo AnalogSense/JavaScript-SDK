@@ -415,7 +415,7 @@ class AsProviderWootingV2 extends AsProvider
                     //if (keycode === 0x01) features_by_pos[matrix_pos].dks          = true; //needs different handling
                     //if (keycode === 0x02) features_by_pos[matrix_pos].mod_tap      = true; //needs different handling
                     //if (keycode === 0x03) features_by_pos[matrix_pos].toggle       = true; //needs different handling
-                    if (keycode === 0x04) features_by_pos[matrix_pos].rapid_snappy = true;
+                    if (keycode === 0x04) features_by_pos[matrix_pos].rappy_snappy = true;
                     if (keycode === 0x05) features_by_pos[matrix_pos].socd         = true;
                 }
                 else if (key_namespace === 0)
