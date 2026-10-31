@@ -515,13 +515,20 @@ class AsProviderNuphy extends AsProvider
                 const scancode = analogsense.nuphyScancodeToHidScancode(event.data.getUint16(2));
                 if (scancode != 0)
                 {
-                    if (event.data.getUint8(7) == 0)
+                    let value = event.data.getUint8(7) / 200;
+                    if (_this.dev.productId == 0x6132)
+                    {
+                        // Field75 HE V2: bytes 6-7 are the travel in 0.01 mm (up to ~0x0139), bytes 14-15 the maximum travel (e.g. 0x0141)
+                        const max_travel = event.data.getUint16(14);
+                        value = (max_travel == 0) ? 0 : Math.min(event.data.getUint16(6) / max_travel, 1);
+                    }
+                    if (value == 0)
                     {
                         delete _this.buffer[scancode];
                     }
                     else
                     {
-                        _this.buffer[scancode] = event.data.getUint8(7) / 200;
+                        _this.buffer[scancode] = value;
                     }
 
                     handler(_this._bufferToActiveKeys());
